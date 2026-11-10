@@ -1,129 +1,65 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Little World ♡</title>
-<style>
-* { box-sizing: border-box; }
 
+<style>
 body {
     margin: 0;
+    padding: 40px 20px;
     background: #10111b;
-    color: #eeeef5;
+    color: #f0eaff;
     font-family: Arial, sans-serif;
     text-align: center;
 }
 
-header {
-    padding: 65px 20px 35px;
+h1 {
+    color: #c5a9ff;
 }
 
-h1 { font-size: 38px; }
-header p { color: #aaaac0; }
-
-nav {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 20px;
-}
-
-nav a {
-    color: #eeeef5;
-    text-decoration: none;
-    background: #25263a;
-    padding: 13px 19px;
-    border-radius: 12px;
-    transition: 0.2s;
-}
-
-nav a:hover {
-    background: #8063b8;
-    transform: translateY(-3px);
-}
-
-section {
-    max-width: 650px;
+.recording {
+    max-width: 500px;
     margin: 25px auto;
-    padding: 30px 20px;
+    padding: 25px;
     background: #1c1d2b;
-    border-radius: 16px;
+    border-radius: 15px;
 }
 
-h2 { color: #c5a9ff; }
-
-section p {
-    color: #c8c8d6;
-    line-height: 1.7;
+audio {
+    width: 100%;
+    margin-top: 15px;
 }
 
-.button {
-    display: inline-block;
-    margin-top: 12px;
-    padding: 12px 20px;
-    background: #8063b8;
-    color: white;
-    text-decoration: none;
-    border-radius: 10px;
-}
-
-footer {
-    padding: 35px;
-    color: #88889b;
-}
-
-@media(max-width:600px) {
-    h1 { font-size: 30px; }
-    section { margin: 18px 12px; }
+a {
+    color: #c5a9ff;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    <h1>Welcome to My World ♡</h1>
-    <p>A little piece of me, my memories, and my life.</p>
-</header>
+<h1>My Little World ♡</h1>
+<p>A place to keep these memories.</p>
 
-<nav>
-    <a href="index.html">🏠 Home</a>
-    <a href="about.html">👤 About Me</a>
-    <a href="memories.html">📸 Memories</a>
-    <a href="music.html">🎵 Music</a>
-    <a href="friends.html">❤️ Friends</a>
-    <a href="messages.html">💌 Messages</a>
-    <a href="links.html">🔗 Links</a>
-</nav>
+<div class="recording">
+    <h2>Voice Message</h2>
+    <audio controls preload="none">
+        <source src="voice-message.ogg" type="audio/ogg">
+        Your browser does not support audio.
+    </audio>
+    <p><a href="voice-message.ogg">Open recording</a></p>
+</div>
 
-<section>
-    <h2>Welcome ♡</h2>
-    <p>
-        This is my own little corner of the internet.
-        A place for the things I love, the people who matter,
-        and the memories I want to keep.
-    </p>
-</section>
-
-<section>
-    <h2>Get to Know Me</h2>
-    <p>There's a lot more to discover. Come explore!</p>
-    <a class="button" href="about.html">About Me →</a>
-</section>
-
-<section>
-    <h2>Memories</h2>
-    <p>Some moments deserve to last forever.</p>
-    <a class="button" href="memories.html">Explore Memories →</a>
-</section>
-
-<footer>
-    Made with ♡
-</footer>
+<div class="recording">
+    <h2>I Love You Too</h2>
+    <audio controls preload="none">
+        <source src="I%20love%20you%20too.mp3" type="audio/mpeg">
+        Your browser does not support audio.
+    </audio>
+    <p><a href="I%20love%20you%20too.mp3">Open recording</a></p>
+</div>
 
 </body>
 </html>
-```
