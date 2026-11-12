@@ -13,9 +13,7 @@ body {
     text-align: center;
     padding: 30px 15px;
 }
-
 h1 { color: #d8b4fe; }
-
 .box {
     max-width: 420px;
     margin: 30px auto;
@@ -23,26 +21,21 @@ h1 { color: #d8b4fe; }
     background: #261d31;
     border-radius: 15px;
 }
-
 input, button {
     box-sizing: border-box;
     width: 100%;
-    padding: 13px;
+    padding: 14px;
     margin: 10px 0;
     border: none;
     border-radius: 9px;
 }
-
 button {
     background: #7045a3;
     color: white;
-    font-size: 16px;
     cursor: pointer;
+    font-size: 16px;
 }
-
 a { color: #d8b4fe; }
-
-#uploadArea { display: none; }
 #status { overflow-wrap: anywhere; }
 </style>
 </head>
@@ -50,92 +43,36 @@ a { color: #d8b4fe; }
 <body>
 
 <h1>♡ Upload Memories</h1>
-<p>Keep your favorite moments safe.</p>
+<p>Add photos, videos and voice messages.</p>
 
 <div class="box">
+    <input id="code" type="password"
+        placeholder="Your private upload code">
 
-    <div id="loginArea">
-        <h2>Owner Login</h2>
-        <input id="email" type="email" placeholder="Email">
-        <input id="password" type="password" placeholder="Password">
-        <button onclick="login()">Log In</button>
-    </div>
+    <input id="file" type="file"
+        accept="image/*,audio/*,video/*">
 
-    <div id="uploadArea">
-        <h2>Upload a Memory</h2>
-
-        <input
-            id="file"
-            type="file"
-            accept="image/*,audio/*,video/*"
-        >
-
-        <button onclick="uploadFile()">Upload Memory ♡</button>
-        <button onclick="logout()">Log Out</button>
-    </div>
+    <button onclick="uploadMemory()">Upload Memory ♡</button>
 
     <p id="status"></p>
 </div>
 
 <p><a href="index.html">← Back Home</a></p>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-const SUPABASE_URL =
-"https://cgzwdimbiwtvhjfxtnon.supabase.co";
+const FUNCTION_URL =
+"https://cgzwdimbiwtvhjfxtnon.supabase.co/functions/v1/upload-memory";
 
-const SUPABASE_KEY =
+const PUBLIC_KEY =
 "sb_publishable_eRxpkKyITYRCL6a8oMjnFg_BdxrqB1T";
 
-const db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
-
-async function login() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const status = document.getElementById("status");
-
-    status.textContent = "Logging in...";
-
-    const { error } = await db.auth.signInWithPassword({
-        email,
-        password
-    });
-
-    if (error) {
-        status.textContent = error.message;
-        return;
-    }
-
-    showUpload();
-}
-
-async function showUpload() {
-    const { data } = await db.auth.getSession();
-
-    if (data.session) {
-        document.getElementById("loginArea").style.display = "none";
-        document.getElementById("uploadArea").style.display = "block";
-        document.getElementById("status").textContent = "";
-    }
-}
-
-async function logout() {
-    await db.auth.signOut();
-    document.getElementById("loginArea").style.display = "block";
-    document.getElementById("uploadArea").style.display = "none";
-    document.getElementById("status").textContent = "Logged out.";
-}
-
-async function uploadFile() {
+async function uploadMemory() {
+    const code = document.getElementById("code").value;
     const file = document.getElementById("file").files[0];
     const status = document.getElementById("status");
 
-    if (!file) {
-        status.textContent = "Choose a file first.";
+    if (!code || !file) {
+        status.textContent = "Enter your code and choose a file.";
         return;
     }
 
@@ -144,32 +81,35 @@ async function uploadFile() {
         return;
     }
 
-    const { data: sessionData } = await db.auth.getSession();
-
-    if (!sessionData.session) {
-        status.textContent = "Please log in first.";
-        return;
-    }
-
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const fileName = Date.now() + "_" + safeName;
+    const form = new FormData();
+    form.append("file", file);
 
     status.textContent = "Uploading...";
 
-    const { error } = await db.storage
-        .from("my-memories")
-        .upload(fileName, file);
+    try {
+        const response = await fetch(FUNCTION_URL, {
+            method: "POST",
+            headers: {
+                "apikey": PUBLIC_KEY,
+                "x-upload-code": code
+            },
+            body: form
+        });
 
-    if (error) {
-        status.textContent = "Upload failed: " + error.message;
-        return;
+        const result = await response.json();
+
+        if (!response.ok) {
+            status.textContent = result.message || "Upload failed.";
+            return;
+        }
+
+        status.textContent = "Uploaded successfully! ♡";
+        document.getElementById("file").value = "";
+
+    } catch (error) {
+        status.textContent = "Connection error. Please try again.";
     }
-
-    status.textContent = "Memory uploaded successfully! ♡";
-    document.getElementById("file").value = "";
 }
-
-showUpload();
 </script>
 
 </body>
