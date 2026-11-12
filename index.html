@@ -2,46 +2,45 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My Little World ♡</title>
-
 <style>
 body {
-    background: #10111b;
-    color: #f0eaff;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 60px 20px;
+  background: #10111b;
+  color: #e0e0e0;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 40px 20px;
 }
-
-h1 {
-    color: #c5a9ff;
+h1 { color: #c5a9ff; }
+.recording {
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 22px;
+  background: #25263a;
+  border-radius: 12px;
 }
-
-a {
-    display: inline-block;
-    background: #25263a;
-    color: #c5a9ff;
-    padding: 15px 30px;
-    border-radius: 12px;
-    text-decoration: none;
-    margin: 10px;
-}
-
-a:hover {
-    background: #8063b8;
-    color: white;
-}
+audio { width: 100%; }
 </style>
 </head>
-
 <body>
 
-<h1>Welcome to My Little World ♡</h1>
-<p>A little place for memories.</p>
+<h1>My Little World ♡</h1>
+<p>A little place for memories that matter.</p>
 
-<a href="links.html">♡ Links</a>
-<a href="pics.html">♡ Pics</a>
+<div class="recording">
+  <h2>Voice Message ♡</h2>
+  <audio controls preload="none">
+    <source src="https://cgzwdimbiwtvhjfxtnon.supabase.co/storage/v1/object/public/my-memories/voice-message.ogg" type="audio/ogg">
+  </audio>
+</div>
+
+<div class="recording">
+  <h2>I Love You Too ♡</h2>
+  <audio controls preload="none">
+    <source src="https://cgzwdimbiwtvhjfxtnon.supabase.co/storage/v1/object/public/my-memories/I%20love%20you%20too.mp3" type="audio/mpeg">
+  </audio>
+</div>
 
 </body>
 </html>
