@@ -1,46 +1,70 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>My Little World ♡</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Little World</title>
+
 <style>
 body {
-  background: #10111b;
-  color: #e0e0e0;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 40px 20px;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #17121f;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
-h1 { color: #c5a9ff; }
-.recording {
-  max-width: 500px;
-  margin: 30px auto;
-  padding: 22px;
-  background: #25263a;
-  border-radius: 12px;
+
+h1 {
+    color: #d8b4fe;
+    font-size: 36px;
 }
-audio { width: 100%; }
+
+p {
+    color: #c4b5d0;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 80%;
+    max-width: 300px;
+    margin-top: 25px;
+}
+
+a {
+    display: block;
+    padding: 16px;
+    border-radius: 12px;
+    background: #7045a3;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+a:hover {
+    background: #8b5fc0;
+}
 </style>
 </head>
+
 <body>
 
 <h1>My Little World ♡</h1>
-<p>A little place for memories that matter.</p>
+<p>A little place for memories.</p>
 
-<div class="recording">
-  <h2>Voice Message ♡</h2>
-  <audio controls preload="none">
-    <source src="https://cgzwdimbiwtvhjfxtnon.supabase.co/storage/v1/object/public/my-memories/voice-message.ogg" type="audio/ogg">
-  </audio>
-</div>
-
-<div class="recording">
-  <h2>I Love You Too ♡</h2>
-  <audio controls preload="none">
-    <source src="https://cgzwdimbiwtvhjfxtnon.supabase.co/storage/v1/object/public/my-memories/I%20love%20you%20too.mp3" type="audio/mpeg">
-  </audio>
+<div class="buttons">
+    <a href="links.html">🎵 Voice Messages</a>
+    <a href="pics.html">📸 Pics & Memories</a>
+    <a href="upload.html">⬆️ Upload Memories</a>
 </div>
 
 </body>
 </html>
+```
