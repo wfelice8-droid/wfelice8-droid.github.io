@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pics ♡</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 body {
     background: #10111b;
@@ -14,13 +16,31 @@ body {
     padding: 30px 20px;
 }
 
-h1 {
-    color: #c5a9ff;
+h1 { color: #c5a9ff; }
+
+.container {
+    max-width: 600px;
+    margin: 25px auto;
+    padding: 20px;
+    background: #1c1d2b;
+    border-radius: 15px;
+}
+
+input, button {
+    padding: 12px;
+    margin: 8px;
+    border-radius: 8px;
+}
+
+button {
+    background: #c5a9ff;
+    border: none;
+    cursor: pointer;
 }
 
 .gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 15px;
     max-width: 900px;
     margin: 30px auto;
@@ -29,13 +49,11 @@ h1 {
 .gallery img {
     width: 100%;
     border-radius: 12px;
-    object-fit: cover;
 }
 
-a {
-    color: #c5a9ff;
-    text-decoration: none;
-}
+a { color: #c5a9ff; }
+
+#uploadArea { display: none; }
 </style>
 </head>
 
@@ -44,13 +62,151 @@ a {
 <h1>My Pictures ♡</h1>
 <p>A collection of memories.</p>
 
-<div class="gallery">
-
-    <!-- Add your pictures here -->
-
+<div class="container" id="loginArea">
+    <h2>Owner Login</h2>
+    <input type="email" id="email" placeholder="Email">
+    <br>
+    <input type="password" id="password" placeholder="Password">
+    <br>
+    <button onclick="login()">Sign In</button>
+    <p id="loginMessage"></p>
 </div>
 
+<div class="container" id="uploadArea">
+    <h2>Upload Pictures ♡</h2>
+    <input type="file" id="photoFile" accept="image/jpeg,image/png,image/webp,image/gif">
+    <br>
+    <button onclick="uploadPhoto()">Upload</button>
+    <button onclick="logout()">Sign Out</button>
+    <p id="uploadMessage"></p>
+</div>
+
+<h2>Gallery</h2>
+<div class="gallery" id="gallery"></div>
+
 <p><a href="index.html">← Home</a></p>
+
+<script>
+const SUPABASE_URL = "https://cgzwdimbiwtvhjfxtnon.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_eRxpkKyITYRCL6a8oMjnFg_BdxrqB1T";
+
+const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+async function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    const { error } = await db.auth.signInWithPassword({
+        email,
+        password
+    });
+
+    if (error) {
+        document.getElementById("loginMessage").textContent = error.message;
+        return;
+    }
+
+    showLoginState();
+}
+
+async function logout() {
+    await db.auth.signOut();
+    showLoginState();
+}
+
+async function showLoginState() {
+    const { data } = await db.auth.getSession();
+
+    const loggedIn = !!data.session;
+
+    document.getElementById("loginArea").style.display =
+        loggedIn ? "none" : "block";
+
+    document.getElementById("uploadArea").style.display =
+        loggedIn ? "block" : "none";
+}
+
+async function uploadPhoto() {
+    const file = document.getElementById("photoFile").files[0];
+
+    if (!file) {
+        alert("Choose a picture first.");
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        alert("Please choose a picture smaller than 5 MB.");
+        return;
+    }
+
+    const fileName = Date.now() + "-" +
+        file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+
+    document.getElementById("uploadMessage").textContent =
+        "Uploading...";
+
+    const { error } = await db.storage
+        .from("my-memories")
+        .upload(fileName, file);
+
+    if (error) {
+        document.getElementById("uploadMessage").textContent =
+            error.message;
+        return;
+    }
+
+    document.getElementById("uploadMessage").textContent =
+        "Picture uploaded successfully! ♡";
+
+    document.getElementById("photoFile").value = "";
+
+    loadGallery();
+}
+
+async function loadGallery() {
+    const { data, error } = await db.storage
+        .from("my-memories")
+        .list("", {
+            limit: 100,
+            sortBy: { column: "created_at", order: "desc" }
+        });
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    const gallery = document.getElementById("gallery");
+    gallery.innerHTML = "";
+
+    data.forEach(file => {
+        if (!file.name.match(/\.(jpg|jpeg|png|webp|gif)$/i)) {
+            return;
+        }
+
+        const { data: urlData } = db.storage
+            .from("my-memories")
+            .getPublicUrl(file.name);
+
+        const img = document.createElement("img");
+        img.src = urlData.publicUrl;
+        img.alt = "Memory";
+
+        gallery.appendChild(img);
+    });
+}
+
+db.auth.onAuthStateChange(() => {
+    showLoginState();
+});
+
+showLoginState();
+loadGallery();
+</script>
 
 </body>
 </html>
